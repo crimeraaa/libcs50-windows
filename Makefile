@@ -3,6 +3,7 @@ CC = gcc
 
 BASENAME = cs50
 LIBNAME  = libcs50
+DIRS 	 = obj/ bin/ lib/
 
 # Since we're building a singular library, I suppose this works.
 # In practice, though, we'd need more complicated variables and rules!
@@ -19,14 +20,23 @@ CFLAGS = -Wall -Wextra -Werror -pedantic -std=c11 -D MAKE_DLL_EXPORTS
 # Remember to surround this with quotes later, especially for PowerShell.
 LDFLAGS = -Wl,--subsystem,windows,--out-implib
 
-.PHONY: all clean
 
-all: $(DLL)
+.PHONY: all clean uninstall
+
+all: $(DIRS) $(DLL)
 
 clean:
 	$(RM) $(wildcard bin/*.dll)
 	$(RM) $(wildcard obj/*.o)
 	$(RM) $(wildcard lib/*.a)
+
+# This will throw an error if the folders don't exist, but whatever...
+uninstall: clean
+	rmdir $(DIRS)
+
+# Make the folders if they don't exist.
+%/:
+	mkdir $@
 
 # Create the bin/cs50.dll and lib/libcs50.a files.
 $(DLL): $(OBJ)

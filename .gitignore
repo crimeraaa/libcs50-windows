@@ -1,1 +1,3 @@
+# Don't include these, they're not very helpful for building
+.github
 .vscode
