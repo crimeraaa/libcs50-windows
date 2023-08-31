@@ -53,8 +53,10 @@
 #include "cs50.h"
 
 // Disable warnings from some compilers about the way we use variadic arguments
+#ifdef __GNUC__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wformat-security"
+#endif
 
 /**
  * Number of strings allocated by get_string.
@@ -75,7 +77,7 @@ static string *strings = NULL;
  * on heap, but library's destructor frees memory on program's exit.
  */
 #undef get_string
-string get_string(va_list *args, const char *format, ...)
+string CS50_CALL get_string(va_list *args, const char *format, ...)
 {
     // Check whether we have room for another string
     if (allocations == SIZE_MAX / sizeof (string))
@@ -214,7 +216,7 @@ string get_string(va_list *args, const char *format, ...)
  * equivalent char; if text is not a single char, user is prompted
  * to retry. If line can't be read, returns CHAR_MAX.
  */
-char get_char(const char *format, ...)
+char CS50_CALL get_char(const char *format, ...)
 {
     va_list ap;
     va_start(ap, format);
@@ -246,7 +248,7 @@ char get_char(const char *format, ...)
  * a double or if value would cause underflow or overflow, user is
  * prompted to retry. If line can't be read, returns DBL_MAX.
  */
-double get_double(const char *format, ...)
+double CS50_CALL get_double(const char *format, ...)
 {
     va_list ap;
     va_start(ap, format);
@@ -287,7 +289,7 @@ double get_double(const char *format, ...)
  * a float or if value would cause underflow or overflow, user is prompted
  * to retry. If line can't be read, returns FLT_MAX.
  */
-float get_float(const char *format, ...)
+float CS50_CALL get_float(const char *format, ...)
 {
     va_list ap;
     va_start(ap, format);
@@ -329,7 +331,7 @@ float get_float(const char *format, ...)
  * or would cause underflow or overflow, user is prompted to retry. If line
  * can't be read, returns INT_MAX.
  */
-int get_int(const char *format, ...)
+int CS50_CALL get_int(const char *format, ...)
 {
     va_list ap;
     va_start(ap, format);
@@ -366,7 +368,7 @@ int get_int(const char *format, ...)
  * [-2^63, 2^63 - 1) or would cause underflow or overflow, user is
  * prompted to retry. If line can't be read, returns LONG_MAX.
  */
-long get_long(const char *format, ...)
+long CS50_CALL get_long(const char *format, ...)
 {
     va_list ap;
     va_start(ap, format);
@@ -403,7 +405,7 @@ long get_long(const char *format, ...)
  * [-2^63, 2^63 - 1) or would cause underflow or overflow, user is
  * prompted to retry. If line can't be read, returns LLONG_MAX.
  */
-long long get_long_long(const char *format, ...)
+long long CS50_CALL get_long_long(const char *format, ...)
 {
     va_list ap;
     va_start(ap, format);
@@ -487,4 +489,6 @@ INITIALIZER(setup)
 }
 
 // Re-enable warnings
+#ifdef __GNUC__
 #pragma GCC diagnostic pop
+#endif
