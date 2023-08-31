@@ -28,15 +28,17 @@ This, in turn, allows you simply type, say, `gcc.exe` and immediately get to wor
 
 Installation will be directly from the command line. For *GCC/Clang*, you can simply use the normal *Command Prompt*, or use *PowerShell*. Your choice!
 
-For *MSVC*, you have 2 options:
+Normally, when building with *MSVC*, you have 2 options:
 
 1. Run *Developer Command Prompt For VS* from the *Start Menu* and `cd` to the directory you downloaded this library to.
 
 2. Locate your `vcvarsall.bat` file from your installation of Visual Studio, and run that directly in your terminal. 
 
-* Do note because `vcvarsall.bat` is a *Windows batchfile*, it only really works for Command Prompt. Running it in PowerShell will not set things up properly.
+* Do note because `vcvarsall.bat` is a *Windows batchfile*, it only really works for *Command Prompt*. Running it in *PowerShell* will not set things up properly.
 
 This means that *MSVC* really only works from *Command Prompt*.
+
+However, you can just run `msvcbuild.bat`, configured to find your installation of Visual Studio, in either *Command Prompt* or *PowerShell* and it should just work!
 
 ### Environment Variables
 
@@ -71,7 +73,7 @@ If you're unfamiliar with working with environment variables:
 
 ### GCC/Clang
 
-`C_INCLUDE_PATH`: Tells the C compiler where to find header (`.h`) files. Works
+`C_INCLUDE_PATH`: Tells the C compiler where to find header (`.h`) files.
 
 `LIBARY_PATH`: Tells the linker where to find import library (`.a`) files.
 
