@@ -139,7 +139,7 @@ So if I run the previous build command, now Windows knows to also look in `C:\li
 
 `msvcbuild.bat`: similar to `make`, but using Visual Studio/MSVC. 
 
-* Before you run this, be sure to change the path inside the batchfile to the correct path of your *Visual Studio* installation, be it the IDE or the Build Tools.
+* Before you run this, be sure to change the `VS_INSTALL` variable inside of the batchfile to the correct path of your *Visual Studio* installation, be it the IDE or the Build Tools.
 
 * Or, if you prefer, simply open `Developer Command Prompt For VS (year)` and `cd` to the libary's directory, then run the batchfile!
 

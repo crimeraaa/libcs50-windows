@@ -37,9 +37,9 @@ goto end
 :cleanup
 
 echo Cleaning up build files...
-del bin\*
-del obj\*
-del lib\*
+del /q bin\*.dll bin\*.exp
+del /q obj\*.obj
+del /q lib\*.lib
 
 :end
 
