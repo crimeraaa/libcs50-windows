@@ -1,3 +1,8 @@
 # Don't include these, they're not very helpful for building
 .github
 .vscode
+
+# Don't commit build directories and files. They're specific to your machine.
+bin/
+lib/
+obj/
