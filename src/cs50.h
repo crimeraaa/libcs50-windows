@@ -39,6 +39,11 @@
 #ifndef CS50_FOR_WINDOWS_H
 #define CS50_FOR_WINDOWS_H
 
+/* I doubt C++ users would bother with this library, but just in case! */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <float.h>
 #include <limits.h>
 #include <stdarg.h>
@@ -82,8 +87,8 @@
     #define CS50_CALL __cdecl
 
 #else /* _WIN32 not defined. */
-    #error If you are not on Windows (e.g. Linux, MacOS) please use the \
-           original version of the CS50 Libary for C. \
+    #error If you are not on Windows (e.g. Linux, MacOS) please consider \
+           using the original version of the CS50 Libary for C. \
            Otherwise, if you are on Windows, but see this error, please \
            file a bug report at my GitHub fork here: \
            https://github.com/crimeraaa/libcs50-windows
@@ -192,5 +197,9 @@ CS50_API string CS50_CALL get_string(va_list *args, const char *format, ...) CS5
  * @param ... The arguments for the string with respect to format specifiers. 
  */
 #define get_string(...) get_string(NULL, __VA_ARGS__)
+
+#ifdef __cplusplus
+} 
+#endif /* __cpluplus defined extern "C" block (1)  */
 
 #endif /* CS50_FOR_WINDOWS_H */

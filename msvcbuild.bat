@@ -1,7 +1,7 @@
 @echo OFF
 
-if "%1"=="clean" goto cleanup
-if "%1"=="uninstall" goto cleanup
+if "%1"=="clean" goto clean
+if "%1"=="uninstall" goto clean
 
 REM Change this to the installation folder of your version of Visual Studio.
 set VS_INSTALL=C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools
@@ -18,17 +18,17 @@ if not defined DevEnvDir (
 )
 
 set BASENAME=cs50
-set CFLAGS=/Wall
-set LDFLAGS=/LD /DMAKE_DLL_EXPORTS
+@REM MSVC's /Wall is much stricter than GCC's -Wall, so I rather use /W3.
+set CFLAGS=/W4 /std:c11 /LD /DMAKE_DLL_EXPORTS
 
-if not exist obj mkdir obj
-if not exist bin mkdir bin
-if not exist lib mkdir lib
+if not exist obj\ mkdir obj\
+if not exist bin\ mkdir bin\
+if not exist lib\ mkdir lib\
 
 REM Create the .obj, which the .dll and .exp needs, which the .lib needs.
 REM The MAKE_DLL_EXPORTS macro must only defined while building.
 echo Building %BASENAME%.dll...
-cl.exe %LDFLAGS% "src\%BASENAME%.c" 
+cl.exe %CFLAGS% "src\%BASENAME%.c" 
 
 REM After building only do we move them to their correct directories.
 echo Moving files to correct directories...
@@ -39,20 +39,21 @@ mv "%BASENAME%.lib" lib\
 
 goto end
 
-:cleanup
+:clean
 
 echo Cleaning up build files...
-del /q bin\*.dll
-del /q obj\*.obj
-del /q lib\*.lib
+if exist bin\ del /q bin\*
+if exist obj\ del /q obj\*
+if exist lib\ del /q lib\*
 
 if not "%1"=="uninstall" goto end
 
 :uninstall
 
-rmdir bin
-rmdir obj
-rmdir lib
+echo Removing build folders...
+if exist bin\ rmdir bin\
+if exist obj\ rmdir obj\
+if exist lib\ rmdir lib\
 
 :end
 

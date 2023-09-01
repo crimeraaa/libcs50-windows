@@ -18,7 +18,7 @@ From here on I'll be referring to the Visual Studio tools as *MSVC*.
 
 * You can install either the *Visual Studio IDE* or the *Visual Studio Build Tools*. 
 
-* I personally went with *Visual Studio Build Tools*, which is what I'll be using for the MSVC portion of this document.
+* I personally went with *Visual Studio Build Tools 2019*, which is what I'll be using for the *MSVC* portion of this document.
 
 Lastly, make sure your compiler of choice is already in your `PATH` environment variable! This makes is so that you don't have to remember the exact place you installed it in every time you want to use it from the command line. 
 
@@ -32,13 +32,15 @@ Normally, when building with *MSVC*, you have 2 options:
 
 1. Run *Developer Command Prompt For VS* from the *Start Menu* and `cd` to the directory you downloaded this library to.
 
-2. Locate your `vcvarsall.bat` file from your installation of Visual Studio, and run that directly in your terminal. 
+2. Locate your `vcvarsall.bat` file from your installation of *Visual Studio*, and run that directly in your terminal with 1 argument: your machine's architecture. For example, since I have *Visual Studio Build Tools 2019*, I can run it like so:
+
+        C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvarsall.bat x64
 
 * Do note because `vcvarsall.bat` is a *Windows batchfile*, it only really works for *Command Prompt*. Running it in *PowerShell* will not set things up properly.
 
 This means that *MSVC* really only works from *Command Prompt*.
 
-However, you can just run `msvcbuild.bat`, configured to find your installation of Visual Studio, in either *Command Prompt* or *PowerShell* and it should just work!
+However, you can just run `msvcbuild.bat`, assuming you configured the `VS_INSTALL` variable to refer to your *Visual Studio* installation folder. You can run the batchfile in either *Command Prompt* or *PowerShell* and it should just work!
 
 ### Environment Variables
 
@@ -75,14 +77,14 @@ If you're unfamiliar with working with environment variables:
 
 `C_INCLUDE_PATH`: Tells the C compiler where to find header (`.h`) files.
 
-`LIBARY_PATH`: Tells the linker where to find import library (`.a`) files.
+`LIBRARY_PATH`: Tells the linker where to find import library (`.a`) files.
 
 Examples:
 
     Variable name: C_INCLUDE_PATH
     Variable value: C:\libcs50-windows\src
 
-    Variable name: LIBARY_PATH
+    Variable name: LIBRARY_PATH
     Variable value: C:\libcs50-windows\lib
 
 For more information, try compiling a dummy project like so:
@@ -93,9 +95,9 @@ then look for the lines `#include <...> search starts here` and `LIBRARY_PATH` t
 
 ### Visual Studio (MSVC)
 
-`INCLUDE`: Tells the MSVC compiler where to find header (`.h`) files.
+`INCLUDE`: Tells the *MSVC* compiler where to find header (`.h`) files.
 
-`LIB`: Tells the MSVC linker where to find import library (`.lib`) files.
+`LIB`: Tells the *MSVC* linker where to find import library (`.lib`) files.
 
 Examples:
 
@@ -117,7 +119,7 @@ This means that if I ran this command:
 
 If Windows can't find `cs50.dll` in the same directory as `hello.exe`, the created application won't run! You *could* fix this by simply copying `cs50.dll` everywhere you need it, and that would work. 
 
-But that defeats the point of having this libary in one place, doesn't it?
+But that defeats the point of having this library in one place, doesn't it?
 
 #### 2. Add the path containing `cs50.dll` to your `PATH` environment variable.
 
@@ -127,7 +129,7 @@ If you need a refresher, [refer to this section.](#environment-variables)
 
 Chances are your `PATH` variable already exists, so you'll just need to add the folder containing `cs50.dll` to it. 
 
-For example, if you downloaded this libary to the `C:\` drive, then you just need to add `C:\libcs50-windows\bin` to `PATH`.
+For example, if you downloaded this library to the `C:\` drive, then you just need to add `C:\libcs50-windows\bin` to `PATH`.
 
 So if I run the previous build command, now Windows knows to also look in `C:\libcs50-windows\bin` for the file `cs50.dll`. Once it finds that, the program we created should run!
 
@@ -139,11 +141,23 @@ So if I run the previous build command, now Windows knows to also look in `C:\li
 
 * If you're going to use Visual Studio, consider using `msvcbuild.bat` instead!
 
-`msvcbuild.bat`: similar to `make`, but using Visual Studio/MSVC. 
+`msvcbuild.bat`: similar to `make`, but using *Visual Studio/MSVC*. 
 
 * Before you run this, be sure to change the `VS_INSTALL` variable inside of the batchfile to the correct path of your *Visual Studio* installation, be it the IDE or the Build Tools.
 
-* Or, if you prefer, simply open `Developer Command Prompt For VS (year)` and `cd` to the libary's directory, then run the batchfile!
+* Or, if you prefer, simply open `Developer Command Prompt For VS (year)` and `cd` to the library's directory, then run the batchfile!
+
+For *MSVC*, you may get errors like these:
+
+    src\cs50.c(159): warning C4244: '=': conversion from 'int' to 'char', possible loss of data
+
+    src\cs50.c(237): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+
+This is normal, it just means the CS50 Library itself uses some techniques or functions that, when looked at very very strictly, may be considered bad practice. 
+
+Assuming you're just using the library for personal use, these warnings shouldn't matter all that much to you. 
+
+However, if you're considering using this library in a real-world project, consider using a different library! The CS50 Library is intended more as "training wheels" for the CS50 course!
 
 ## Usage
 
@@ -151,7 +165,7 @@ For GCC/Clang, link with the flag `-lcs50`, for example:
 
     gcc.exe hello.c -lcs50
 
-For MSVC, simply add `cs50.lib` after your source file/s. For example:
+For *MSVC*, simply add `cs50.lib` after your source file/s. For example:
 
     cl.exe hello.c cs50.lib
 
@@ -173,7 +187,31 @@ General usage:
     // deprecated as of fall 2017
     long long ll = get_long_long("Prompt: ");
 
+## Cleaning
 
+To remove all the build files, simply run your build script on choice in the command line followed by the word `clean`, for example:
+
+    make clean
+
+Or:
+
+    msvcbuild.bat clean
+
+This will remove all the build files but keep the `bin\`, `obj\` and `lib\` folders around.
+
+## Uninstalling
+
+If you also want to remove the build files and the folders, simply use `uninstall` instead of `clean`, for example:
+
+    make uninstall
+
+Or:
+
+    msvcbuilt.bat uninstall
+
+Afterwards, you may also want to clear the environment variables you set for the compiler. You can then remove the folder from your machine.
+
+Do note that because my Makefile is intended to be used on either *Command Prompt* or *PowerShell*, I opted not to use shell-specific commands to check if folders exist already, because a command like `if exist bin\ rmdir bin\` will only work on *Command Prompt*, but not on *PowerShell*.
 
 ## Documentation
 
